@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "catnip",
+  "version": "1.16.5",
+  "name": "catnip",
+  "authors": [
+    "dskprt"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.github.dskprt.catnip.Catnip$Mod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.10.0",
+    "minecraft": "1.16.x"
+  }
+}

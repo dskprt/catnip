@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: com.github.dskprt.catnip.main.Main
+Premain-Class: com.github.dskprt.catnip.agent.Agent
+Agent-Class: com.github.dskprt.catnip.agent.Agent
+Can-Retransform-Classes: true
