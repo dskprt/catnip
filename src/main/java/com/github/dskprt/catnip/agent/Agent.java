@@ -2,9 +2,11 @@ package com.github.dskprt.catnip.agent;
 
 import com.github.dskprt.catnip.agent.transformer.JavassistTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.InGameHudTransformer;
+import com.github.dskprt.catnip.agent.transformer.transformers.KeyboardTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.MinecraftClientTransformer;
 import com.github.dskprt.catnip.ui.JfxUI;
 import com.github.dskprt.catnip.ui.controllers.StartupController;
+import javafx.application.Platform;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -20,6 +22,7 @@ public class Agent {
     private static final Map<String, JavassistTransformer> transformers = new HashMap<String, JavassistTransformer>() {{
         put("net.minecraft.client.MinecraftClient", new MinecraftClientTransformer());
         put("net.minecraft.client.gui.hud.InGameHud", new InGameHudTransformer());
+        put("net.minecraft.client.Keyboard", new KeyboardTransformer());
     }};
 
     public static void premain(String arg, Instrumentation inst) {
@@ -34,7 +37,7 @@ public class Agent {
         JfxUI.show();
 
         StartupController controller = JfxUI.getController();
-        controller.setStages(2);
+        controller.setStages(4);
         controller.incrementStage();
         controller.loadingInfo.setText("Adding JAR to the Fabric class loader");
 
@@ -77,6 +80,8 @@ public class Agent {
             controller.loadingInfo.setText("Transforming " + entry.getKey() + "...");
             transform(entry.getValue(), getClass(o, m, entry.getKey()), inst);
         }
+
+        JfxUI.hide();
     }
 
     private static void transform(ClassFileTransformer transformer, Class<?> cls, Instrumentation inst) {

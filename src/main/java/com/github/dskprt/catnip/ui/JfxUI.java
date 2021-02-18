@@ -1,5 +1,6 @@
 package com.github.dskprt.catnip.ui;
 
+import com.github.dskprt.catnip.Catnip;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +34,26 @@ public class JfxUI extends Application {
 
     public synchronized static void show() {
         if(stage == null) {
-            new Thread(() -> Application.launch(JfxUI.class), "JavaFX Startup Thread").start();
+            Platform.setImplicitExit(false);
+
+            try {
+                Platform.runLater(() -> {
+                    Thread.currentThread().setContextClassLoader(Catnip.class.getClassLoader());
+
+                    try {
+                        JfxUI ui = new JfxUI();
+                        ui.init();
+                        ui.start(new Stage());
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch(IllegalStateException e) {
+                new Thread(() -> {
+                    Thread.currentThread().setContextClassLoader(Catnip.class.getClassLoader());
+                    Application.launch(JfxUI.class);
+                }, "JavaFX Startup Thread").start();
+            }
 
             while(stage == null) {
                 try {
@@ -52,7 +72,26 @@ public class JfxUI extends Application {
 
     public synchronized static void hide() {
         if(stage == null) {
-            new Thread(() -> Application.launch(JfxUI.class), "JavaFX Startup Thread").start();
+            Platform.setImplicitExit(false);
+
+            try {
+                Platform.runLater(() -> {
+                    Thread.currentThread().setContextClassLoader(Catnip.class.getClassLoader());
+
+                    try {
+                        JfxUI ui = new JfxUI();
+                        ui.init();
+                        ui.start(new Stage());
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch(IllegalStateException e) {
+                new Thread(() -> {
+                    Thread.currentThread().setContextClassLoader(Catnip.class.getClassLoader());
+                    Application.launch(JfxUI.class);
+                }, "JavaFX Startup Thread").start();
+            }
 
             while(stage == null) {
                 try {
