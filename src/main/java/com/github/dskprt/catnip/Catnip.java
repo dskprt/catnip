@@ -1,5 +1,7 @@
 package com.github.dskprt.catnip;
 
+import com.github.dskprt.catnip.event.EventManager;
+import com.github.dskprt.catnip.event.events.Render2DEvent;
 import com.github.dskprt.catnip.main.Main;
 import com.github.dskprt.catnip.utils.Utils;
 import com.github.dskprt.catnip.utils.ZipUtils;
@@ -8,13 +10,29 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 public class Catnip {
+
+    private static Catnip instance;
+
+    public EventManager eventManager;
+
+    private Catnip() {
+        eventManager = new EventManager();
+        eventManager.register(Render2DEvent.class, (e) -> {
+            Render2DEvent event = (Render2DEvent) e;
+
+            MinecraftClient.getInstance().textRenderer.draw(event.matrices, "Hello!", 5, 5, 0xffffff);
+        });
+    }
+
+    public static Catnip getInstance() {
+        if(instance == null) instance = new Catnip();
+        return instance;
+    }
 
     public static class Mod implements ClientModInitializer {
 

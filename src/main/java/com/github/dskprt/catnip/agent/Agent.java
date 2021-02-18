@@ -1,10 +1,14 @@
 package com.github.dskprt.catnip.agent;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
+import com.github.dskprt.catnip.agent.transformer.transformers.InGameHudTransformer;
+import com.github.dskprt.catnip.agent.transformer.transformers.MinecraftClientTransformer;
 
+import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
 
 public class Agent {
 
@@ -17,47 +21,55 @@ public class Agent {
     }
 
     public static void load(Instrumentation inst) {
-        MinecraftClient mc = null;
-        TextRenderer tr = null;
-        int counter = 0;
+        for(Class<?> cls : inst.getAllLoadedClasses()) {
+            if(cls.getName().startsWith("net.minecraft.")) {
+                Class<?> cl;
 
-        // avoid crash when injecting very early into the game
-        while(mc == null) {
-            mc = MinecraftClient.getInstance();
-        }
+                try {
+                    Class<?> knotCl = Class.forName("net.fabricmc.loader.launch.knot.KnotClassLoader");
+                    cl = (knotCl.cast(cls.getClassLoader())).getClass();
+                } catch(ClassNotFoundException | ClassCastException e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-        while(tr == null) {
-            tr = mc.textRenderer;
-        }
+                try {
+                    Method addURL = cl.getDeclaredMethod("addURL", URL.class);
+                    if(!addURL.isAccessible()) addURL.setAccessible(true);
 
-        final MinecraftClient m = mc;
+                    addURL.invoke(cls.getClassLoader(), Agent.class.getProtectionDomain().getCodeSource().getLocation());
+                } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-        new Thread(() -> {
-            m.getWindow().setTitle("ERROR - Class transformation not supported!");
-
-            try {
-                Thread.sleep(5000);
-            } catch(InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
+        }
 
-            m.updateWindowTitle();
-        }).start();
+        for(Class<?> cls : inst.getAllLoadedClasses()) {
+            if(cls.getName().startsWith("net.minecraft.")) {
+                switch(cls.getName()) {
+                    case "net.minecraft.client.MinecraftClient":
+                        transform(new MinecraftClientTransformer(), cls, inst);
+                        break;
+                    case "net.minecraft.client.gui.hud.InGameHud":
+                        transform(new InGameHudTransformer(), cls, inst);
+                        break;
+                }
+            }
+        }
+    }
 
-//        if(!inst.isRetransformClassesSupported()) {
-//            final MinecraftClient m = mc;
-//
-//            new Thread(() -> {
-//                m.getWindow().setTitle("ERROR - Class transformation not supported!");
-//
-//                try {
-//                    Thread.sleep(5000);
-//                } catch(InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                m.updateWindowTitle();
-//            }).start();
-//        }
+    private static void transform(ClassFileTransformer transformer, Class<?> cls, Instrumentation inst) {
+        inst.addTransformer(transformer, true);
+
+        try {
+            inst.retransformClasses(cls);
+        } catch(UnmodifiableClassException e) {
+            e.printStackTrace();
+        }
+
+        inst.removeTransformer(transformer);
     }
 }
