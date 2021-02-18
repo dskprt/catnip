@@ -22,8 +22,6 @@ public abstract class JavassistTransformer implements ClassFileTransformer {
             return null;
         }
 
-        //Logger.info(String.format("Transforming [%s]...", s.replaceAll("/", ".")));
-
         try {
             pool.appendClassPath(new LoaderClassPath(classLoader));
 

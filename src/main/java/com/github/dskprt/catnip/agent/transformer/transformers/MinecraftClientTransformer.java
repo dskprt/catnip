@@ -13,7 +13,7 @@ public class MinecraftClientTransformer extends JavassistTransformer {
     @Override
     public CtClass transform(ClassLoader classLoader, String name, Class<?> _cls, CtClass cls) throws Exception {
         CtMethod m = cls.getDeclaredMethod("run");
-        m.insertBefore("{ Catnip.getInstance(); }");
+        m.insertBefore("new Catnip();");
 
         return cls;
     }

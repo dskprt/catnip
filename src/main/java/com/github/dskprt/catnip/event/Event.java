@@ -10,6 +10,8 @@ public class Event {
     }
 
     public void setCancelled(boolean cancelled) {
+        if(!cancellable) throw new IllegalStateException("Event is not cancellable!");
+
         this.cancelled = cancelled;
     }
 }
