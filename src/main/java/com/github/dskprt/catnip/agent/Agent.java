@@ -1,7 +1,10 @@
 package com.github.dskprt.catnip.agent;
 
+import com.github.dskprt.catnip.agent.transformer.JavassistTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.InGameHudTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.MinecraftClientTransformer;
+import com.github.dskprt.catnip.ui.JfxUI;
+import com.github.dskprt.catnip.ui.controllers.StartupController;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -9,8 +12,15 @@ import java.lang.instrument.UnmodifiableClassException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Agent {
+
+    private static final Map<String, JavassistTransformer> transformers = new HashMap<String, JavassistTransformer>() {{
+        put("net.minecraft.client.MinecraftClient", new MinecraftClientTransformer());
+        put("net.minecraft.client.gui.hud.InGameHud", new InGameHudTransformer());
+    }};
 
     public static void premain(String arg, Instrumentation inst) {
         load(inst);
@@ -21,6 +31,13 @@ public class Agent {
     }
 
     public static void load(Instrumentation inst) {
+        JfxUI.show();
+
+        StartupController controller = JfxUI.getController();
+        controller.setStages(2);
+        controller.incrementStage();
+        controller.loadingInfo.setText("Adding JAR to the Fabric class loader");
+
         Method m = null;
         Object o = null;
 
@@ -54,8 +71,12 @@ public class Agent {
             }
         }
 
-        transform(new MinecraftClientTransformer(), getClass(o, m, "net.minecraft.client.MinecraftClient"), inst);
-        transform(new InGameHudTransformer(), getClass(o, m, "net.minecraft.client.gui.hud.InGameHud"), inst);
+        controller.incrementStage();
+
+        for(Map.Entry<String, JavassistTransformer> entry : transformers.entrySet()) {
+            controller.loadingInfo.setText("Transforming " + entry.getKey() + "...");
+            transform(entry.getValue(), getClass(o, m, entry.getKey()), inst);
+        }
     }
 
     private static void transform(ClassFileTransformer transformer, Class<?> cls, Instrumentation inst) {

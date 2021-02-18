@@ -4,6 +4,8 @@ import com.github.dskprt.catnip.event.EventManager;
 import com.github.dskprt.catnip.event.events.Render2DEvent;
 import com.github.dskprt.catnip.main.Main;
 
+import com.github.dskprt.catnip.ui.JfxUI;
+import com.github.dskprt.catnip.ui.controllers.StartupController;
 import com.github.dskprt.catnip.utils.Utils;
 import com.github.dskprt.catnip.utils.ZipUtils;
 import net.bytebuddy.agent.ByteBuddyAgent;
@@ -16,12 +18,12 @@ import java.io.IOException;
 
 public class Catnip {
 
-    private static Catnip INSTANCE;
+    private static Catnip instance;
 
     private final EventManager eventManager;
 
     public Catnip() {
-        INSTANCE = this;
+        instance = this;
 
         eventManager = new EventManager();
         eventManager.register(Render2DEvent.class, (e) -> {
@@ -32,8 +34,8 @@ public class Catnip {
     }
 
     public static Catnip getInstance() {
-        if(INSTANCE == null) throw new IllegalStateException("Not yet initialized!");
-        return INSTANCE;
+        if(instance == null) throw new IllegalStateException("Not yet initialized!");
+        return instance;
     }
 
     public EventManager getEventManager() {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #303030;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.dskprt.catnip.ui.controllers.StartupController">
+    <children>
+      <ProgressBar fx:id="progressBar" layoutX="14.0" layoutY="91.0" prefHeight="18.0" prefWidth="370.0" progress="0.0" style="-fx-control-inner-background: #252525; -fx-text-box-border: #252525; -fx-shadow-highlight-color: transparent;" />
+      <Label fx:id="loadingStage" alignment="CENTER" layoutY="68.0" prefHeight="17.0" prefWidth="400.0" text="Loading... (0/0)" textAlignment="CENTER" textFill="WHITE" />
+      <Label fx:id="loadingInfo" alignment="CENTER" layoutX="1.0" layoutY="112.0" prefHeight="17.0" prefWidth="400.0" text="..." textAlignment="CENTER" textFill="WHITE" />
+    </children>
+</AnchorPane>
