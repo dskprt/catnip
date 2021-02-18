@@ -10,10 +10,11 @@ public class MinecraftClientTransformer extends JavassistTransformer {
         super("net.minecraft.client.MinecraftClient");
     }
 
+    // TODO find a better solution
     @Override
     public CtClass transform(ClassLoader classLoader, String name, Class<?> _cls, CtClass cls) throws Exception {
-        CtMethod m = cls.getDeclaredMethod("run");
-        m.insertBefore("new Catnip();");
+        CtMethod m = cls.getDeclaredMethod("tick");
+        m.insertBefore("{ if(Catnip.getInstance() == null) new Catnip(); }");
 
         return cls;
     }

@@ -60,7 +60,6 @@ public class Catnip {
     }
 
     public static Catnip getInstance() {
-        if(instance == null) throw new IllegalStateException("Not yet initialized!");
         return instance;
     }
 

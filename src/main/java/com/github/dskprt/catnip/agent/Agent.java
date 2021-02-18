@@ -33,6 +33,7 @@ public class Agent {
         load(inst);
     }
 
+    // TODO display errors on the javafx ui
     public static void load(Instrumentation inst) {
         JfxUI.show();
 
