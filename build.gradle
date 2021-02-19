@@ -3,13 +3,33 @@ plugins {
     id 'maven-publish'
 }
 
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
 group 'com.github.dskprt'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    manifest.attributes(
+            "Manifest-Version": 1.0,
+            "Main-Class": "com.github.dskprt.catnip.main.Main",
+            "Premain-Class": "com.github.dskprt.catnip.agent.Agent",
+            "Agent-Class": "com.github.dskprt.catnip.agent.Agent",
+            "Can-Retransform-Classes": true
+    )
+
+    from {
+        configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {
@@ -17,6 +37,6 @@ dependencies {
     mappings "net.fabricmc:yarn:1.16.5+build.4:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.1"
 
-    implementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.10.20'
-    implementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
+    embed "net.bytebuddy:byte-buddy-agent:1.10.20"
+    embed "org.javassist:javassist:3.27.0-GA"
 }
