@@ -39,4 +39,5 @@ dependencies {
 
     embed "net.bytebuddy:byte-buddy-agent:1.10.20"
     embed "org.javassist:javassist:3.27.0-GA"
+    embed "org.reflections:reflections:0.9.12"
 }

@@ -1,9 +1,10 @@
 package com.github.dskprt.catnip.module;
 
-import com.github.dskprt.catnip.module.modules.Test;
+import com.github.dskprt.catnip.settings.Settings;
 import com.github.dskprt.catnip.ui.JfxUI;
 import com.github.dskprt.catnip.ui.controllers.StartupController;
 import javafx.application.Platform;
+import org.reflections.Reflections;
 
 import java.util.ArrayList;
 
@@ -15,13 +16,25 @@ public class ModuleManager {
         modules = new ArrayList<>();
 
         StartupController controller = JfxUI.getController();
+        Platform.runLater(controller::incrementStage);
 
-        Platform.runLater(() -> {
-            controller.incrementStage();
-            controller.loadingInfo.setText("Registering modules");
-        });
+        new Reflections("com.github.dskprt.catnip.module.modules").getSubTypesOf(Module.class)
+                .forEach(m -> {
+                    Module module;
 
-        modules.add(new Test());
+                    try {
+                        module = m.newInstance();
+                    } catch(InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    Platform.runLater(() -> controller.loadingInfo.setText("Registering module " + module.getName()));
+                    modules.add(module);
+
+                    Platform.runLater(() -> controller.loadingInfo.setText("Loading settings for module " + module.getName()));
+                    Settings.load(module);
+                });
     }
 
     public Module getModuleById(String id) {

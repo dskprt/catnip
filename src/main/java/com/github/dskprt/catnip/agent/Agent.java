@@ -1,6 +1,7 @@
 package com.github.dskprt.catnip.agent;
 
 import com.github.dskprt.catnip.agent.transformer.JavassistTransformer;
+import com.github.dskprt.catnip.agent.transformer.transformers.ClientPlayerEntityTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.InGameHudTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.KeyboardTransformer;
 import com.github.dskprt.catnip.agent.transformer.transformers.MinecraftClientTransformer;
@@ -23,6 +24,7 @@ public class Agent {
         put("net.minecraft.client.MinecraftClient", new MinecraftClientTransformer());
         put("net.minecraft.client.gui.hud.InGameHud", new InGameHudTransformer());
         put("net.minecraft.client.Keyboard", new KeyboardTransformer());
+        put("net.minecraft.client.network.ClientPlayerEntity", new ClientPlayerEntityTransformer());
     }};
 
     public static void premain(String arg, Instrumentation inst) {
@@ -38,7 +40,7 @@ public class Agent {
         JfxUI.show();
 
         StartupController controller = JfxUI.getController();
-        controller.setStages(4);
+        controller.setStages(5);
         controller.incrementStage();
         controller.loadingInfo.setText("Adding JAR to the Fabric class loader");
 

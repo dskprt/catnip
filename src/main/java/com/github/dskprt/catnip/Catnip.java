@@ -1,12 +1,14 @@
 package com.github.dskprt.catnip;
 
 import com.github.dskprt.catnip.event.EventManager;
+import com.github.dskprt.catnip.event.events.KeyboardEvent;
 import com.github.dskprt.catnip.event.events.PlayerTickEvent;
 import com.github.dskprt.catnip.event.events.Render2DEvent;
 import com.github.dskprt.catnip.main.Main;
 
 import com.github.dskprt.catnip.module.Module;
 import com.github.dskprt.catnip.module.ModuleManager;
+import com.github.dskprt.catnip.settings.Settings;
 import com.github.dskprt.catnip.ui.JfxUI;
 import com.github.dskprt.catnip.ui.controllers.StartupController;
 import com.github.dskprt.catnip.utils.Utils;
@@ -16,11 +18,15 @@ import net.bytebuddy.agent.ByteBuddyAgent;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.IOException;
 
 public class Catnip {
+
+    public static final File CONFIG_DIR = new File(System.getProperty("user.home"), ".catnip");
+    public static final File SETTINGS_DIR = new File(CONFIG_DIR, "settings");
 
     private static Catnip instance;
 
@@ -29,6 +35,9 @@ public class Catnip {
 
     public Catnip() {
         instance = this;
+
+        if(!CONFIG_DIR.exists()) CONFIG_DIR.mkdir();
+        if(!SETTINGS_DIR.exists()) SETTINGS_DIR.mkdir();
 
         JfxUI.show();
 
@@ -56,7 +65,28 @@ public class Catnip {
                 .filter(Module::isEnabled)
                 .forEach(Module::onUpdate));
 
+        eventManager.register(KeyboardEvent.class, e -> {
+            KeyboardEvent event = (KeyboardEvent) e;
+
+            if(event.action != GLFW.GLFW_PRESS) return;
+
+            moduleManager.getModules().stream()
+                    .filter(m -> m.getKeybinding() == event.key)
+                    .forEach(m -> m.setEnabled(!m.isEnabled()));
+        });
+
+        Platform.runLater(() -> {
+            controller.incrementStage();
+            controller.loadingInfo.setText("Registering shutdown hook");
+        });
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+
         JfxUI.hide();
+    }
+
+    public void shutdown() {
+        moduleManager.getModules().forEach(Settings::save);
     }
 
     public static Catnip getInstance() {

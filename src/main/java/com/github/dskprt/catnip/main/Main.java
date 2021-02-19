@@ -14,12 +14,12 @@ public class Main {
         JFrame frame = new JFrame("catnip");
         frame.setUndecorated(true);
 
-        String pid = "";
+        String pid;
 
         if(System.getProperty("os.name").startsWith("Windows")) {
             try {
                 Runtime runtime = Runtime.getRuntime();
-                Process proc = runtime.exec("powershell \"(Get-Process | Where-Object { $_.MainWindowTitle -like 'Minecraft 1.16*' }).Id\"");
+                Process proc = runtime.exec("powershell \"(Get-Process | Where-Object { $_.MainWindowTitle -like 'Minecraft*' }).Id\"");
 
                 BufferedReader stdin = new BufferedReader(new
                         InputStreamReader(proc.getInputStream()));
@@ -28,6 +28,7 @@ public class Main {
 
                 if(pid == null) {
                     JOptionPane.showMessageDialog(frame, "Minecraft 1.16.x is not running!", "catnip", JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
                     return;
                 }
             } catch(IOException e) {
