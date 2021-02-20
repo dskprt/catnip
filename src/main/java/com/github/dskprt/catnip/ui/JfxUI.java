@@ -19,7 +19,7 @@ public class JfxUI extends Application {
 
     @Override
     public void init() throws Exception {
-        loader = new FXMLLoader(this.getClass().getResource("/scenes/main.fxml")); /////////
+        loader = new FXMLLoader(this.getClass().getResource("/scenes/startup.fxml"));
         scene = new Scene(loader.load());
     }
 
@@ -30,7 +30,6 @@ public class JfxUI extends Application {
         stage.setTitle("catnip");
         stage.setResizable(false);
         stage.setScene(scene);
-        stage.show(); /////////
     }
 
     public synchronized static void show() {
