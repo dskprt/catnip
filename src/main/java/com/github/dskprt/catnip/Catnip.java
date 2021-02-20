@@ -81,7 +81,12 @@ public class Catnip {
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-        JfxUI.hide();
+
+        if(MinecraftClient.getInstance().world != null) {
+            JfxUI.hide();
+        } else {
+            JfxUI.setPagePath("/scenes/main.fxml");
+        }
     }
 
     public void shutdown() {

@@ -1,0 +1,55 @@
+.tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+.tab {
+    -fx-rotate: 90;
+}
+
+.tab {
+    -fx-background-color: #202020;
+}
+
+.tab:hover {
+    -fx-border-width: 0;
+    -fx-background-color: #252525;
+}
+
+.tab:selected {
+    -fx-border-width: 0;
+    -fx-background-color: #303030;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-radius: 0;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+}
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: #202020;
+}
+
+#home {
+    -fx-background-image: url("../icons/outline_home_white_36dp.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 72 72;
+    -fx-background-position: center center;
+}
+
+#modules {
+    -fx-background-image: url("../icons/outline_wysiwyg_white_36dp.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 72 72;
+    -fx-background-position: center center;
+}
+
+#settings {
+    -fx-background-image: url("../icons/outline_settings_white_36dp.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 72 72;
+    -fx-background-position: center center;
+}

@@ -13,8 +13,8 @@ public class ClientPlayerEntityTransformer extends JavassistTransformer {
     @Override
     public CtClass transform(ClassLoader classLoader, String name, Class<?> _cls, CtClass cls) throws Exception {
         CtMethod m = cls.getDeclaredMethod("tick");
-        m.insertBefore("Catnip.getInstance().getEventManager().fire(new PlayerTickEvent.Pre());");
-        m.insertAfter("Catnip.getInstance().getEventManager().fire(new PlayerTickEvent.Post());");
+        m.insertBefore("Catnip.getInstance().getEventManager().fire(new com.github.dskprt.catnip.event.events.PlayerTickEvent.Pre());");
+        m.insertAfter("Catnip.getInstance().getEventManager().fire(new com.github.dskprt.catnip.event.events.PlayerTickEvent.Post());");
 
         return cls;
     }

@@ -1,6 +1,7 @@
 package com.github.dskprt.catnip.ui;
 
 import com.github.dskprt.catnip.Catnip;
+import com.github.dskprt.catnip.utils.Utils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,6 @@ import java.io.IOException;
 
 public class JfxUI extends Application {
 
-    private static String pagePath;
     private static FXMLLoader loader;
 
     private static Stage stage;
@@ -19,7 +19,7 @@ public class JfxUI extends Application {
 
     @Override
     public void init() throws Exception {
-        loader = new FXMLLoader(this.getClass().getResource("/scenes/startup.fxml"));
+        loader = new FXMLLoader(this.getClass().getResource("/scenes/main.fxml")); /////////
         scene = new Scene(loader.load());
     }
 
@@ -30,6 +30,7 @@ public class JfxUI extends Application {
         stage.setTitle("catnip");
         stage.setResizable(false);
         stage.setScene(scene);
+        stage.show(); /////////
     }
 
     public synchronized static void show() {
@@ -65,8 +66,11 @@ public class JfxUI extends Application {
         }
 
         Platform.runLater(() -> {
-            stage.setScene(scene);
             stage.show();
+
+            int[] coordinates = Utils.centerInMinecraft((int) stage.getWidth(), (int) stage.getHeight());
+            stage.setX(coordinates[0]);
+            stage.setY(coordinates[1]);
         });
     }
 
@@ -110,15 +114,22 @@ public class JfxUI extends Application {
     }
 
     public static void setPagePath(String fxmlPath) {
-        pagePath = fxmlPath;
-
         Platform.runLater(() -> {
-            loader = new FXMLLoader(JfxUI.class.getResource(pagePath));
+            loader = new FXMLLoader(JfxUI.class.getResource(fxmlPath));
 
             try {
                 scene = new Scene(loader.load());
             } catch(IOException e) {
                 e.printStackTrace();
+                return;
+            }
+
+            stage.setScene(scene);
+
+            if(stage.isShowing()) {
+                int[] coordinates = Utils.centerInMinecraft((int) stage.getWidth(), (int) stage.getHeight());
+                stage.setX(coordinates[0]);
+                stage.setY(coordinates[1]);
             }
         });
     }
