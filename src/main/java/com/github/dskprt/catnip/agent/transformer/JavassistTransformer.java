@@ -1,5 +1,8 @@
 package com.github.dskprt.catnip.agent.transformer;
 
+import com.github.dskprt.catnip.ui.JfxUI;
+import com.github.dskprt.catnip.ui.controllers.StartupController;
+import javafx.application.Platform;
 import javassist.*;
 
 import java.io.ByteArrayInputStream;
@@ -22,6 +25,8 @@ public abstract class JavassistTransformer implements ClassFileTransformer {
             return null;
         }
 
+        StartupController controller = JfxUI.getController();
+
         try {
             pool.appendClassPath(new LoaderClassPath(classLoader));
 
@@ -35,6 +40,7 @@ public abstract class JavassistTransformer implements ClassFileTransformer {
                     return transform(classLoader, s, aClass, ctClass).toBytecode();
                 } catch(Exception e) {
                     e.printStackTrace();
+                    Platform.runLater(() -> controller.loadingInfo.setText("ERROR: Unable to transform class " + s.replaceAll("/", ".")));
                 }
             }
         } catch(Exception e) {

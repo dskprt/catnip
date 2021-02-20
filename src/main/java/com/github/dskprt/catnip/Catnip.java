@@ -42,7 +42,7 @@ public class Catnip {
         JfxUI.show();
 
         StartupController controller = JfxUI.getController();
-        controller.setStages(4);
+        controller.setStages(5);
         controller.setStage(2);
 
         eventManager = new EventManager();
@@ -81,7 +81,6 @@ public class Catnip {
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-
         JfxUI.hide();
     }
 

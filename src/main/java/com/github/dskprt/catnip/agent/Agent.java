@@ -27,6 +27,8 @@ public class Agent {
         put("net.minecraft.client.network.ClientPlayerEntity", new ClientPlayerEntityTransformer());
     }};
 
+    private static StartupController controller;
+
     public static void premain(String arg, Instrumentation inst) {
         load(inst);
     }
@@ -35,14 +37,16 @@ public class Agent {
         load(inst);
     }
 
-    // TODO display errors on the javafx ui
     public static void load(Instrumentation inst) {
         JfxUI.show();
 
-        StartupController controller = JfxUI.getController();
+        controller = JfxUI.getController();
         controller.setStages(5);
-        controller.incrementStage();
-        controller.loadingInfo.setText("Adding JAR to the Fabric class loader");
+
+        Platform.runLater(() -> {
+            controller.incrementStage();
+            controller.loadingInfo.setText("Adding JAR to the Fabric class loader");
+        });
 
         Method m = null;
         Object o = null;
@@ -57,6 +61,7 @@ public class Agent {
                     cl = o.getClass();
                 } catch(ClassNotFoundException | ClassCastException e) {
                     e.printStackTrace();
+                    Platform.runLater(() -> controller.loadingInfo.setText("ERROR: Could not find the Knot class loader"));
                     return;
                 }
 
@@ -70,6 +75,7 @@ public class Agent {
                     addURL.invoke(cls.getClassLoader(), Agent.class.getProtectionDomain().getCodeSource().getLocation());
                 } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
+                    Platform.runLater(() -> controller.loadingInfo.setText("ERROR: Unable to find or invoke the addURL method"));
                     return;
                 }
 
@@ -77,10 +83,10 @@ public class Agent {
             }
         }
 
-        controller.incrementStage();
+        Platform.runLater(controller::incrementStage);
 
         for(Map.Entry<String, JavassistTransformer> entry : transformers.entrySet()) {
-            controller.loadingInfo.setText("Transforming " + entry.getKey() + "...");
+            Platform.runLater(() -> controller.loadingInfo.setText("Transforming " + entry.getKey() + "..."));
             transform(entry.getValue(), getClass(o, m, entry.getKey()), inst);
         }
 
@@ -94,6 +100,7 @@ public class Agent {
             inst.retransformClasses(cls);
         } catch(UnmodifiableClassException e) {
             e.printStackTrace();
+            Platform.runLater(() -> controller.loadingInfo.setText("ERROR: Unable to transform class " + cls.getSimpleName()));
         }
 
         inst.removeTransformer(transformer);
