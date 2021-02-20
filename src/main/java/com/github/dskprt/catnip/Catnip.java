@@ -8,6 +8,7 @@ import com.github.dskprt.catnip.main.Main;
 
 import com.github.dskprt.catnip.module.Module;
 import com.github.dskprt.catnip.module.ModuleManager;
+import com.github.dskprt.catnip.module.modules.GUI;
 import com.github.dskprt.catnip.settings.Settings;
 import com.github.dskprt.catnip.ui.JfxUI;
 import com.github.dskprt.catnip.ui.controllers.StartupController;

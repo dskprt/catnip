@@ -11,10 +11,13 @@ import javafx.scene.layout.*;
 public class MainController {
 
     @FXML
-    private Button shutdownBtn;
+    public Button shutdownBtn;
 
     @FXML
-    private TabPane tabPane;
+    public TabPane tabPane;
+
+    @FXML
+    public AnchorPane modulesPane;
 
     @FXML
     public void initialize() {
@@ -30,9 +33,5 @@ public class MainController {
     public void shutdownAction(ActionEvent actionEvent) {
         // TODO uninject
         JfxUI.hide();
-    }
-
-    public void selectTab(int index) {
-        tabPane.getSelectionModel().select(index);
     }
 }

@@ -53,3 +53,28 @@
     -fx-background-size: 72 72;
     -fx-background-position: center center;
 }
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
+    -fx-background-color: #202020;
+    -fx-background-radius: 5px;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-text-fill: white;
+}

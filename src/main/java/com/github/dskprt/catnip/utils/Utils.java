@@ -14,6 +14,7 @@ public class Utils {
     public static int[] centerInMinecraft(int width, int height) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
+        if(mc == null) return new int[] { 0, 0 };
         if(mc.getWindow() == null) return new int[] { 0, 0 };
 
         int x = (mc.getWindow().getWidth() - width) / 2;

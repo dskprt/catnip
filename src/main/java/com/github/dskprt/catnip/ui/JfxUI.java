@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -14,7 +15,8 @@ public class JfxUI extends Application {
 
     private static FXMLLoader loader;
 
-    private static Stage stage;
+    public static String pagePath;
+    public static Stage stage;
     public static Scene scene;
 
     @Override
@@ -26,6 +28,11 @@ public class JfxUI extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         JfxUI.stage = stage;
+
+        stage.setOnCloseRequest(e -> hide());
+        scene.setOnKeyPressed(e -> {
+            if(e.getCode() == KeyCode.ESCAPE) hide();
+        });
 
         stage.setTitle("catnip");
         stage.setResizable(false);
@@ -113,8 +120,10 @@ public class JfxUI extends Application {
     }
 
     public static void setPagePath(String fxmlPath) {
+        pagePath = fxmlPath;
+
         Platform.runLater(() -> {
-            loader = new FXMLLoader(JfxUI.class.getResource(fxmlPath));
+            loader = new FXMLLoader(JfxUI.class.getResource(pagePath));
 
             try {
                 scene = new Scene(loader.load());

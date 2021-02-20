@@ -32,10 +32,10 @@ public class Test extends Module {
 
     @Override
     public void onEnabled() {
-        System.out.println("bTest" + bTest);
-        System.out.println("iTest" + iTest);
-        System.out.println("cTest" + cTest);
-        System.out.println("fTest" + fTest);
-        System.out.println("clrTest" + clrTest.toString());
+        System.out.println("bTest: " + bTest);
+        System.out.println("iTest: " + iTest);
+        System.out.println("cTest: " + cTest);
+        System.out.println("fTest: " + fTest);
+        System.out.println("clrTest: " + clrTest.toString());
     }
 }

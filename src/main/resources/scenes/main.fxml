@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
+<?import com.github.dskprt.catnip.ui.components.SwitchButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #303030;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.dskprt.catnip.ui.controllers.MainController">
+<AnchorPane prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #303030;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.dskprt.catnip.ui.controllers.MainController">
    <children>
       <TabPane fx:id="tabPane" prefHeight="407.0" prefWidth="700.0" side="LEFT" stylesheets="@main.css" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="90.0" tabMaxWidth="80.0" tabMinHeight="90.0" tabMinWidth="80.0" AnchorPane.leftAnchor="-6.0" AnchorPane.topAnchor="-7.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
          <tabs>
@@ -15,7 +23,16 @@
             </Tab>
             <Tab id="modules" closable="false">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="621.0">
+                     <children>
+                        <ScrollPane hbarPolicy="NEVER" layoutY="7.0" prefHeight="400.0" prefWidth="605.0" stylesheets="@main.css" vbarPolicy="ALWAYS">
+                          <content>
+                            <AnchorPane fx:id="modulesPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="590.0">
+                                 <children>
+                                 </children></AnchorPane>
+                          </content>
+                        </ScrollPane>
+                     </children></AnchorPane>
                </content>
             </Tab>
             <Tab id="settings" closable="false">
