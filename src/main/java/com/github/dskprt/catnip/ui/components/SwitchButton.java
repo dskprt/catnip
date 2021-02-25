@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /*
 https://stackoverflow.com/a/57290206
  */
@@ -51,7 +53,7 @@ public class SwitchButton extends StackPane {
     }
 
     // TODO cleaner and more modular way for multiple click events
-    public SwitchButton(Module module) {
+    public SwitchButton(Module module, AtomicBoolean settingsOpen) {
         getChildren().addAll(back, button);
         setMinSize(30, 15);
 
@@ -75,6 +77,8 @@ public class SwitchButton extends StackPane {
 
         button.setFocusTraversable(false);
         setClickEvent(e -> {
+            if(settingsOpen.get()) return;
+
             setState(!getState());
             module.setEnabled(getState());
         });
